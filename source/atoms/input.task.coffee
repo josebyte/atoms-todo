@@ -14,5 +14,7 @@ class Atoms.Atom.InputTask extends Atoms.Atom.Input
 
   onChange: (event, atom) =>
     if event.keyCode is 13 and @value()
-      __.Entity.Task.create text: @value(), done: false
-      do @clean
+      __.proxy("POST", "task", text: @value()).then (error, result) =>
+        unless error
+          __.Entity.Task.create result
+          do @clean

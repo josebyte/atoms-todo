@@ -24,11 +24,25 @@ class Atoms.Atom.LiTask extends Atoms.Atom.Li
     @input.on "keyup", @onChange
 
   onChange: (event) =>
-    @entity.updateAttributes text: @input.val() if event.keyCode is 13 and @input.val()
+    if event.keyCode is 13 and @input.val()
+      attributes =
+        id   : @entity.id
+        text : @input.val()
+
+      @_onUpdate attributes
 
   onDestroy: =>
     @entity.destroy()
 
   onDone: =>
     @attributes.done = !@entity.done
-    @entity.updateAttributes done: @attributes.done
+    attributes =
+      id   : @entity.id
+      done : @attributes.done
+    @_onUpdate attributes
+
+  _onUpdate: (attributes) ->
+    __.proxy("PUT", "task", attributes).then (error, result) =>
+      unless error
+        @entity.updateAttributes result
+
