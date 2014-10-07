@@ -13,3 +13,9 @@ class Atoms.Molecule.ListTask extends Atoms.Molecule.List
       entity    : "__.Entity.Task"
       create    : true
       update    : true
+
+  constructor: ->
+    super
+    __.proxy("GET", "task").then (error, result) =>
+        unless error
+          __.Entity.Task.create task for task in result

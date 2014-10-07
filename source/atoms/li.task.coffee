@@ -32,7 +32,9 @@ class Atoms.Atom.LiTask extends Atoms.Atom.Li
       @_onUpdate attributes
 
   onDestroy: =>
-    @entity.destroy()
+    __.proxy("DELETE", "task", id: @entity.id).then (error, result) =>
+      unless error
+        @entity.destroy()
 
   onDone: =>
     @attributes.done = !@entity.done
